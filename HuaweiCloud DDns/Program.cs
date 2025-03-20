@@ -15,7 +15,6 @@ namespace HuaweiCloud_DDns
                 new MainService()
             };
             ServiceBase.Run(ServicesToRun);
-
         }
     }
 }

@@ -52,7 +52,7 @@ namespace HuaweiCloud_DDns
 
         private void OnNetworkAddressChanged(object sender, EventArgs e)
         {
-                UpdateIpAddress();
+            UpdateIpAddress();
         }
 
         private void OnNetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)

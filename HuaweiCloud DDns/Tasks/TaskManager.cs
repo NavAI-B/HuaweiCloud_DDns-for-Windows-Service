@@ -14,7 +14,7 @@ namespace HuaweiCloud_DDns.Tasks
         private readonly Dictionary<TaskTypes, Type> m_TypeMap;
         private readonly HashSet<Task> m_Tasks;
 
-        public IReadOnlyCollection<Task> Tasks => m_Tasks;
+        public static IReadOnlyCollection<Task> Tasks => Instance.m_Tasks;
 
         public TaskManager()
         {
@@ -37,22 +37,28 @@ namespace HuaweiCloud_DDns.Tasks
             }
         }
 
-        public void AddTask(Task task)
+        public static void AddTask(Task task)
         {
-            if (!m_Tasks.Contains(task))
+            if (!Instance.m_Tasks.Contains(task))
             {
-                m_Tasks.Add(task);
+                Instance.m_Tasks.Add(task);
                 task.Active();
             }
         }
 
-        public void RemoveTask(Task task)
+        public static void RemoveTask(Task task)
         {
-            if (m_Tasks.Remove(task))
+            if (Instance.m_Tasks.Remove(task))
                 task.Deactive();
         }
 
-        public void ParseTasks(JToken json)
+        public static void RemoveAllTasks()
+        {
+            foreach (var task in Instance.m_Tasks) { task.Deactive(); }
+            Instance.m_Tasks.Clear();
+        }
+
+        public static void ParseTasks(JToken json)
         {
             if (json is JArray array)
             {
@@ -73,7 +79,7 @@ namespace HuaweiCloud_DDns.Tasks
             else Debug.Fail("无效的配置文件！");
         }
 
-        public void ParseTask(JObject json)
+        public static void ParseTask(JObject json)
         {
             if (!json.ContainsKey("Type"))
             {
@@ -82,7 +88,7 @@ namespace HuaweiCloud_DDns.Tasks
             }
 
             var typeId = json["Type"].Value<TaskTypes>();
-            if (!m_TypeMap.TryGetValue(typeId, out var type))
+            if (!Instance.m_TypeMap.TryGetValue(typeId, out var type))
             {
                 Debug.Fail($"未知的Task类型，类型: {json["Type"].Value<string>()}");
                 return;

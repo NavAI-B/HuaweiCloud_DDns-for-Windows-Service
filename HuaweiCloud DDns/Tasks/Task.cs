@@ -5,7 +5,7 @@ namespace HuaweiCloud_DDns.Tasks
 {
     internal abstract class Task
     {
-        private bool m_Actived;
+        private bool m_Actived = false;
 
         private string m_Region;
         private string m_Zone;
@@ -16,11 +16,6 @@ namespace HuaweiCloud_DDns.Tasks
         public string Zone => m_Zone;
         public string RecorderSet => m_RecorderSet;
         public string NSType => m_NSType;
-
-        public Task()
-        {
-            m_Actived = false;
-        }
 
         protected virtual void OnActive() { }
         protected virtual void OnDeactive() { }
